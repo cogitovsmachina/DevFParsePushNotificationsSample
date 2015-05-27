@@ -8,20 +8,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
-
 import mx.devf.R;
 import mx.devf.adapter.CategoryAdapter;
 import mx.devf.app.ParsePushApplication;
@@ -36,12 +27,12 @@ public class CategoryFragment extends Fragment {
     private RecyclerView my_recycler_view;
     private CategoryAdapter adapter;
     private RecyclerView.LayoutManager manager;
-    private String url ="https://sl-webplatform-engine-staging.appspot.com/api/home/getTimeline/";
+    private String url = "https://sl-webplatform-engine-staging.appspot.com/api/home/getTimeline/";
 
     public CategoryFragment() {
     }
 
-    public static CategoryFragment getInstance(){
+    public static CategoryFragment getInstance() {
 
         return new CategoryFragment();
     }
@@ -66,23 +57,6 @@ public class CategoryFragment extends Fragment {
         manager = new GridLayoutManager(getActivity(), 3);
         my_recycler_view.setLayoutManager(manager);
 
-        ArrayList<Category> categories = new ArrayList<>();
-
-        for(int index = 0; index < 20; index++){
-
-            Category category = new Category();
-
-            category.setCategoryId("123");
-            category.setCategoryImage("");
-            category.setCategoryName("Frutas");
-
-
-            categories.add(category);
-        }
-
-        adapter = new CategoryAdapter(categories);
-
-        my_recycler_view.setAdapter(adapter);
     }
 
     private void makeSimpleRequest() {
@@ -90,12 +64,11 @@ public class CategoryFragment extends Fragment {
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null,
                 new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                Log.wtf("STRING-REQUEST::", String.valueOf(jsonObject));
-                String parseResponse = JsonDataParser.parserCategoriesJsonObject(jsonObject);
-            }
-        }, new Response.ErrorListener() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        Log.wtf("STRING-REQUEST::", String.valueOf(jsonObject));
+                    }
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 Log.wtf("STRING-REQUEST-ERROR::", String.valueOf(volleyError));
@@ -106,13 +79,20 @@ public class CategoryFragment extends Fragment {
         ParsePushApplication.getInstance().addToRequestQueue(jsonObjectRequest, "getCategories");
     }
 
-    private void jsonRequest(){
+    private void jsonRequest() {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
-                        Log.wtf("STRING-REQUEST::", String.valueOf(jsonObject));
-                        String parseResponse = JsonDataParser.parserCategoriesJsonObject(jsonObject);
+                        ArrayList<Category> categories = null;
+                        if (jsonObject != null) {
+                            Log.wtf("STRING-REQUEST::", String.valueOf(jsonObject));
+                            categories = JsonDataParser.parserCategoriesJsonObject(jsonObject);
+
+                            adapter = new CategoryAdapter(categories);
+
+                            my_recycler_view.setAdapter(adapter);
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override

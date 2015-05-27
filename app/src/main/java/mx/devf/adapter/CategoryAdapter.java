@@ -2,6 +2,7 @@ package mx.devf.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +36,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     }
 
     @Override
-    public void onBindViewHolder(CategoryViewHolder categoryViewHolder, int i) {
+    public void onBindViewHolder(CategoryViewHolder categoryViewHolder, final int i) {
         categoryViewHolder.category_name_text.setText(String.valueOf(categories.get(i).getCategoryName()));
+        categoryViewHolder.category_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.wtf("Click::", categories.get(i).getCategoryId());
+            }
+        });
     }
 
     @Override

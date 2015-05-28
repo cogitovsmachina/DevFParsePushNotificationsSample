@@ -11,12 +11,18 @@ import android.view.ViewGroup;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import mx.devf.R;
 import mx.devf.adapter.CategoryAdapter;
 import mx.devf.app.ParsePushApplication;
 import mx.devf.model.Category;
+import mx.devf.model.Local;
+import mx.devf.model.Precio;
+import mx.devf.model.Product;
 import mx.devf.parser.JsonDataParser;
 
 /**
@@ -103,5 +109,30 @@ public class CategoryFragment extends Fragment {
 
         // Add the request to the RequestQueue.
         ParsePushApplication.getInstance().addToRequestQueue(jsonObjectRequest, "getAlgo");
+    }
+
+    private ArrayList<Product> createProduct(JSONArray jsonArray){
+        ArrayList<Product> products = new ArrayList<>();
+        try {
+
+            for(int index = 0; index < jsonArray.length(); index++){
+                Product product = new Product();
+                ArrayList<Precio> precios = new ArrayList<>();
+                product.setProductId(jsonArray.getJSONObject(index).getString("id"));
+                product.setProductName(jsonArray.getJSONObject(index).getString("name"));
+                for(int indexb = 0; indexb < jsonArray.getJSONObject(index).getJSONArray("precios").length(); indexb++){
+                    Precio precio = new Precio();
+                    precio.setPrecioSuper(jsonArray.getJSONObject(index).getJSONArray("precios").getJSONObject(indexb).getLong("precio"));
+                    Local local = new Local();
+                    local.setName(jsonArray.getJSONObject(index).getJSONArray("precios").getJSONObject(indexb).getJSONObject("local").getString("name"));
+                    precio.setPrecioLocal(local);
+                    precios.add(precio);
+                }
+                products.add(product);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return products;
     }
 }

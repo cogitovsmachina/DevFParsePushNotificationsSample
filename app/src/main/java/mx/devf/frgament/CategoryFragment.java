@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
@@ -52,8 +53,7 @@ public class CategoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_categoty_layout, container, false);
         initView(view);
-        makeSimpleRequest();
-        jsonRequest();
+        jsonArrayRequest();
         return view;
     }
 
@@ -65,74 +65,25 @@ public class CategoryFragment extends Fragment {
 
     }
 
-    private void makeSimpleRequest() {
-        // Request a string response from the provided URL.
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        Log.wtf("STRING-REQUEST::", String.valueOf(jsonObject));
-                    }
-                }, new Response.ErrorListener() {
+    private void jsonArrayRequest(){
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest("http://profecoapi.tk/categories/?format=json", new Response.Listener<JSONArray>() {
             @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                Log.wtf("STRING-REQUEST-ERROR::", String.valueOf(volleyError));
-            }
-        });
+            public void onResponse(JSONArray jsonArray) {
+                Log.wtf("ArrayREquestResult:::", String.valueOf(jsonArray));
+                if(jsonArray != null){
+                    ArrayList<Category> cat = JsonDataParser.parserCategoryProducts(jsonArray);
+                    Log.wtf("Que hay??", String.valueOf(cat.get(0).getCategoryName()));
+                    adapter = new CategoryAdapter(cat, getActivity());
 
-        // Add the request to the RequestQueue.
-        ParsePushApplication.getInstance().addToRequestQueue(jsonObjectRequest, "getCategories");
-    }
-
-    private void jsonRequest() {
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        ArrayList<Category> categories = null;
-                        if (jsonObject != null) {
-                            Log.wtf("STRING-REQUEST::", String.valueOf(jsonObject));
-                            categories = JsonDataParser.parserCategoriesJsonObject(jsonObject);
-
-                            adapter = new CategoryAdapter(categories);
-
-                            my_recycler_view.setAdapter(adapter);
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                Log.wtf("STRING-REQUEST-ERROR::", String.valueOf(volleyError));
-            }
-        });
-
-        // Add the request to the RequestQueue.
-        ParsePushApplication.getInstance().addToRequestQueue(jsonObjectRequest, "getAlgo");
-    }
-
-    private ArrayList<Product> createProduct(JSONArray jsonArray){
-        ArrayList<Product> products = new ArrayList<>();
-        try {
-
-            for(int index = 0; index < jsonArray.length(); index++){
-                Product product = new Product();
-                ArrayList<Precio> precios = new ArrayList<>();
-                product.setProductId(jsonArray.getJSONObject(index).getString("id"));
-                product.setProductName(jsonArray.getJSONObject(index).getString("name"));
-                for(int indexb = 0; indexb < jsonArray.getJSONObject(index).getJSONArray("precios").length(); indexb++){
-                    Precio precio = new Precio();
-                    precio.setPrecioSuper(jsonArray.getJSONObject(index).getJSONArray("precios").getJSONObject(indexb).getLong("precio"));
-                    Local local = new Local();
-                    local.setName(jsonArray.getJSONObject(index).getJSONArray("precios").getJSONObject(indexb).getJSONObject("local").getString("name"));
-                    precio.setPrecioLocal(local);
-                    precios.add(precio);
+                    my_recycler_view.setAdapter(adapter);
                 }
-                products.add(product);
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return products;
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
+            }
+        });
+        ParsePushApplication.getInstance().addToRequestQueue(jsonArrayRequest, "jsonArrayRequest");
     }
 }

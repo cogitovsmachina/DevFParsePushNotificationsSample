@@ -1,5 +1,7 @@
 package mx.devf.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.ArrayList;
+
+import mx.devf.DetailActivity;
 import mx.devf.R;
 import mx.devf.model.Category;
 
@@ -17,9 +21,11 @@ import mx.devf.model.Category;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
     private ArrayList<Category> categories;
+    private Context context;
 
-    public CategoryAdapter(ArrayList<Category> categories) {
+    public CategoryAdapter(ArrayList<Category> categories, Context context) {
         this.categories = categories;
+        this.context = context;
     }
 
     @Override
@@ -39,6 +45,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             @Override
             public void onClick(View v) {
                 Log.wtf("Click::", categories.get(i).getCategoryId());
+//                context.startActivity(new Intent(context, DetailActivity.class));
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra("categoryId", categories.get(i).getCategoryId());
+                context.startActivity(intent);
             }
         });
     }

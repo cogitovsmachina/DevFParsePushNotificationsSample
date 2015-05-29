@@ -37,7 +37,6 @@ public class ParsePushApplication extends Application {
                 "eCjUuXj4llPlO4IEPpgy0Lk9yiaC9kL8Sf0ltl3O");
         ParseInstallation.getCurrentInstallation().saveInBackground();
 
-
         // initialize the singleton
         sInstance = this;
     }

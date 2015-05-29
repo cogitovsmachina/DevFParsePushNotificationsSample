@@ -1,6 +1,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".HomeActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".HomeActivity">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_item_1"
+            android:checked="true"
+            android:icon="@mipmap/ic_launcher"
+            android:title="navigation_item_1"/>
+        <item
+            android:id="@+id/navigation_item_2"
+            android:icon="@mipmap/ic_launcher"
+            android:title="navigation_item_2"/>
+        <item
+            android:id="@+id/navigation_subheader"
+            android:title="navigation_subheader">
+            <menu>
+                <item
+                    android:id="@+id/navigation_sub_item_1"
+                    android:icon="@mipmap/ic_launcher"
+                    android:title="navigation_sub_item_1"/>
+                <item
+                    android:id="@+id/navigation_sub_item_2"
+                    android:icon="@mipmap/ic_launcher"
+                    android:title="navigation_sub_item_2"/>
+            </menu>
+        </item>
+    </group>
 </menu>

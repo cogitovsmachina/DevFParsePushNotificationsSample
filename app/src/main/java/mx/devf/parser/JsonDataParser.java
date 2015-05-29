@@ -1,56 +1,39 @@
 package mx.devf.parser;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import mx.devf.model.Category;
+import mx.devf.model.Local;
+import mx.devf.model.Precio;
+import mx.devf.model.Product;
 
 /**
  * Created by hugo on 5/26/15.
  */
 public class JsonDataParser {
 
-    public static ArrayList<Category> parserCategoriesJsonObject(JSONObject jsonObject){
-        ArrayList<Category> categories = new ArrayList<>();
+    public static ArrayList<Category> parserCategoryProducts(JSONArray jsonArrayCategories){
+        ArrayList<Category> categories = null;
+        try {
+            categories = new ArrayList<>();
+            for(int i = 0; i < jsonArrayCategories.length(); i++){
+                Category category = new Category();
+                JSONObject cateryObject = jsonArrayCategories.getJSONObject(i);
+                category.setCategoryId(cateryObject.getString("id"));
+                category.setCategoryName(cateryObject.getString("categoria"));
+                category.setCategoryImage(cateryObject.getString("imagen"));
 
-//        try {
-//            for(int i = 0; i < jsonObject.getJSONArray("categories").length(); i++){
-//                Category category = new Category();
-//
-//                category.setCategoryId(jsonObject.getJSONArray("categories").getJSONObject(i).getString("id"));
-//                category.setCategoryImage(jsonObject.getJSONArray("categories").getJSONObject(i).getString("image"));
-//                category.setCategoryName(jsonObject.getJSONArray("categories").getJSONObject(i).getString("name"));
-//
-//
-//                categories.add(category);
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-
-
-        for (int index = 0; index < 20; index++) {
-
-            Category category = new Category();
-
-            category.setCategoryId("123");
-            category.setCategoryImage("");
-            category.setCategoryName("Frutas");
-
-
-            categories.add(category);
+                categories.add(category);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
+
         return categories;
-
     }
-
-    public static String parserCategoryProducts(JSONObject jsonObjectProducts){
-        String algo = "";
-        return algo;
-    }
-
-
 }

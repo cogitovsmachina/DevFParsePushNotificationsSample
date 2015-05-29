@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 public class DetailActivity extends AppCompatActivity {
     private String categoryId = "";
-    private String producsURL = "....";
+    private String producsURL = "categories/%s/?format=json";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,7 +16,7 @@ public class DetailActivity extends AppCompatActivity {
 
         categoryId = getIntent().getStringExtra("categoryId");
 
-        producsURL += categoryId;
+        producsURL = String.format(producsURL, categoryId);
     }
 
     @Override

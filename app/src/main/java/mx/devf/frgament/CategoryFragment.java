@@ -1,7 +1,7 @@
 package mx.devf.frgament;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,19 +11,12 @@ import android.view.ViewGroup;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import java.util.ArrayList;
 import mx.devf.R;
 import mx.devf.adapter.CategoryAdapter;
 import mx.devf.app.ParsePushApplication;
 import mx.devf.model.Category;
-import mx.devf.model.Local;
-import mx.devf.model.Precio;
-import mx.devf.model.Product;
 import mx.devf.parser.JsonDataParser;
 
 /**
@@ -34,19 +27,27 @@ public class CategoryFragment extends Fragment {
     private RecyclerView my_recycler_view;
     private CategoryAdapter adapter;
     private RecyclerView.LayoutManager manager;
-    private String url = "https://sl-webplatform-engine-staging.appspot.com/api/home/getTimeline/";
+    private int comesFrom = -1;
 
     public CategoryFragment() {
     }
 
-    public static CategoryFragment getInstance() {
+    public static CategoryFragment getInstance(int comesFrom) {
+        CategoryFragment mCategoryFragment = new CategoryFragment();
 
-        return new CategoryFragment();
+        Bundle args = new Bundle();
+        args.putInt("from", comesFrom);
+        mCategoryFragment.setArguments(args);
+
+        return mCategoryFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getArguments() != null){
+            comesFrom = getArguments().getInt("from");
+        }
     }
 
     @Override
@@ -73,7 +74,7 @@ public class CategoryFragment extends Fragment {
                 if(jsonArray != null){
                     ArrayList<Category> cat = JsonDataParser.parserCategoryProducts(jsonArray);
                     Log.wtf("Que hay??", String.valueOf(cat.get(0).getCategoryName()));
-                    adapter = new CategoryAdapter(cat, getActivity());
+                    adapter = new CategoryAdapter(cat, getActivity(), comesFrom);
 
                     my_recycler_view.setAdapter(adapter);
                 }

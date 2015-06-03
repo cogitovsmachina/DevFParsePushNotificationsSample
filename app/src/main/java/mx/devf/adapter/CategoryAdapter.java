@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import mx.devf.DetailActivity;
+import mx.devf.DetailViewPagerActivity;
 import mx.devf.R;
 import mx.devf.model.Category;
 
@@ -22,10 +23,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     private ArrayList<Category> categories;
     private Context context;
+    private int comesFrom;
 
-    public CategoryAdapter(ArrayList<Category> categories, Context context) {
+    public CategoryAdapter(ArrayList<Category> categories, Context context, int comesFrom) {
         this.categories = categories;
         this.context = context;
+        this.comesFrom = comesFrom;
     }
 
     @Override
@@ -46,9 +49,19 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             public void onClick(View v) {
                 Log.wtf("Click::", categories.get(i).getCategoryId());
 //                context.startActivity(new Intent(context, DetailActivity.class));
-                Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra("categoryId", categories.get(i).getCategoryId());
-                context.startActivity(intent);
+//                comes From home activity
+                if (comesFrom == 0) {
+                    Intent intent = new Intent(context, DetailActivity.class);
+                    intent.putExtra("categoryId", categories.get(i).getCategoryId());
+                    intent.putExtra("categoryName", categories.get(i).getCategoryName());
+                    context.startActivity(intent);
+//                  comes form detail
+                } else {
+                    Intent intent = new Intent(context, DetailViewPagerActivity.class);
+                    intent.putExtra("categoryId", categories.get(i).getCategoryId());
+                    intent.putExtra("categoryName", categories.get(i).getCategoryName());
+                    context.startActivity(intent);
+                }
             }
         });
     }

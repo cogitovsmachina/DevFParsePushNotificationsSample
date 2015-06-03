@@ -1,6 +1,7 @@
 package mx.devf;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -18,13 +19,15 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        final ActionBar ab = getSupportActionBar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+        ab.setDisplayHomeAsUpEnabled(true);
+
         // Track app opens.
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.home_container, CategoryFragment.getInstance())
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.home_container, CategoryFragment.getInstance(0))
                 .commit();
     }
-
-
 }
